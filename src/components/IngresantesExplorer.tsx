@@ -2,7 +2,6 @@ import React from 'react';
 import { Info } from 'lucide-react';
 import type { Ingresante, Stats } from '../types/ingresantes';
 import { useIngresantesFilter } from '../hooks/useIngresantesFilter';
-import { MetricsOverview } from './MetricsOverview';
 import { SearchAndFilters } from './SearchAndFilters';
 import { IngresantesTable } from './IngresantesTable';
 import { IngresantesCards } from './IngresantesCards';
@@ -51,14 +50,7 @@ export default function IngresantesExplorer({ ingresantes, stats }: Props) {
 
   return (
     <div className="w-full space-y-6">
-      {/* 1. Unified Single Overview Metrics Card */}
-      <MetricsOverview
-        filteredCount={filteredData.length}
-        totalCount={ingresantes.length}
-        filterStats={filterStats}
-      />
-
-      {/* 2. Control Panel: Search & Filters */}
+      {/* Control Panel: Search & Filters */}
       <SearchAndFilters
         searchTerm={searchTerm}
         onSearchChange={val => handleFilterChange(setSearchTerm, val)}
