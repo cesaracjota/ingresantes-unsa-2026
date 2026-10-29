@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title = "Ingresantes UNSA 2026 — Investigación Formativa Econometría II",
+  description = "Visualizador oficial de ingresantes a la Universidad Nacional de San Agustín de Arequipa (UNSA) Proceso 2026 para el trabajo de investigación formativa de Econometría II."
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="h-full bg-slate-100/70">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/Escudo_UNSA.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="min-h-full flex flex-col font-sans text-slate-900 antialiased selection:bg-rose-900 selection:text-white">
+    <slot />
+  </body>
+</html>
