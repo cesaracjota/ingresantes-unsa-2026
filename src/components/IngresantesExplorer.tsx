@@ -43,9 +43,7 @@ export default function IngresantesExplorer({ ingresantes, stats }: Props) {
     paginatedData,
     handleFilterChange,
     resetFilters,
-    hasActiveFilters,
-    exportToCSV,
-    exportToJSON
+    hasActiveFilters
   } = useIngresantesFilter(ingresantes, stats);
 
   return (
@@ -74,8 +72,6 @@ export default function IngresantesExplorer({ ingresantes, stats }: Props) {
         modalityStats={stats.por_modalidad}
         hasActiveFilters={hasActiveFilters}
         onResetFilters={resetFilters}
-        onExportCSV={exportToCSV}
-        onExportJSON={exportToJSON}
       />
 
       {/* 3. Empty State or Results (Table / Cards) */}
@@ -98,6 +94,8 @@ export default function IngresantesExplorer({ ingresantes, stats }: Props) {
       ) : viewMode === 'table' ? (
         <IngresantesTable
           data={paginatedData}
+          selectedCarrera={selectedCarrera}
+          selectedModalidad={selectedModalidad}
           copiedScoreId={copiedScoreId}
           onCopyScore={handleCopyScore}
           onSelectStudent={setSelectedStudent}

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import type { Ingresante, Stats, SortOption, ViewMode } from '../types/ingresantes';
 
 export function useIngresantesFilter(ingresantes: Ingresante[], stats: Stats) {
@@ -6,21 +6,12 @@ export function useIngresantesFilter(ingresantes: Ingresante[], stats: Stats) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCarrera, setSelectedCarrera] = useState<string>('TODAS');
   const [selectedModalidad, setSelectedModalidad] = useState<string>('TODAS');
-  const [sortBy, setSortBy] = useState<SortOption>('puesto');
+  
+  // Por defecto: Mayor puntaje a menor puntaje
+  const [sortBy, setSortBy] = useState<SortOption>('puntaje_desc');
 
-  // In mobile screens, default view mode ALWAYS to 'cards'
-  const [viewMode, setViewMode] = useState<ViewMode>(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      return 'cards';
-    }
-    return 'table';
-  });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      setViewMode('cards');
-    }
-  }, []);
+  // En móvil y escritorio: Tabla Detallada por defecto siempre
+  const [viewMode, setViewMode] = useState<ViewMode>('table');
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -124,12 +115,12 @@ export function useIngresantesFilter(ingresantes: Ingresante[], stats: Stats) {
     setSearchTerm('');
     setSelectedCarrera('TODAS');
     setSelectedModalidad('TODAS');
-    setSortBy('puesto');
+    setSortBy('puntaje_desc');
     setCurrentPage(1);
   };
 
   const hasActiveFilters =
-    searchTerm !== '' || selectedCarrera !== 'TODAS' || selectedModalidad !== 'TODAS' || sortBy !== 'puesto';
+    searchTerm !== '' || selectedCarrera !== 'TODAS' || selectedModalidad !== 'TODAS' || sortBy !== 'puntaje_desc';
 
   const handleCopyCode = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -142,37 +133,6 @@ export function useIngresantesFilter(ingresantes: Ingresante[], stats: Stats) {
     navigator.clipboard.writeText(String(score));
     setCopiedScoreId(id);
     setTimeout(() => setCopiedScoreId(null), 2000);
-  };
-
-  const exportToCSV = () => {
-    const headers = ['N.º', 'Carrera', 'Modalidad', 'Código', 'Apellidos', 'Nombres', 'Puntaje'];
-    const rows = filteredData.map(item => [
-      item.numero,
-      `"${item.carrera}"`,
-      `"${item.modalidad}"`,
-      `"${item.codigo}"`,
-      `"${item.apellidos}"`,
-      `"${item.nombres}"`,
-      item.puntaje ?? ''
-    ]);
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `ingresantes_unsa_2026_${selectedCarrera.toLowerCase()}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const exportToJSON = () => {
-    const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(filteredData, null, 2))}`;
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', jsonString);
-    downloadAnchor.setAttribute('download', `ingresantes_unsa_2026_${selectedCarrera.toLowerCase()}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
   };
 
   return {
@@ -204,8 +164,6 @@ export function useIngresantesFilter(ingresantes: Ingresante[], stats: Stats) {
     paginatedData,
     handleFilterChange,
     resetFilters,
-    hasActiveFilters,
-    exportToCSV,
-    exportToJSON
+    hasActiveFilters
   };
 }
